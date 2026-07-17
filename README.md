@@ -24,4 +24,4 @@ But it can be used for any other HTTP Request.
 Issues and pull requests are welcome. Please briefly describe what was changed or added.
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](https://github.com/PixelCoreStudio/Tether-Macro-Deck/blob/main/LICENSE)
