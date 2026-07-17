@@ -2,7 +2,7 @@
 Tether is a plugin for Macro Deck its whole purpose is to trigger a HHTP request (GET or POST) directly with a press on your Macro Deck.
 
 You can use it for many things like webhooks, smart-home control through their HTTP API or anything else that reacts on a HTTP Request.
-I decided to do that plugin because I made the [Tether plugin for spicetify](https://github.com/PixelCoreStudio/Tether-Spicetify-Extension/tree/main) and I wanted to use a Macro Deck to controll it.
+I decided to do that plugin because I made the [Tether plugin for spicetify](https://github.com/PixelCoreStudio/Tether-Spicetify-Extension/tree/main) and I wanted to use a Macro Deck to control it.
 But it can be used for any other HTTP Request.
 
 ## Features
