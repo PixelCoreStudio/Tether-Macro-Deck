@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using SuchByte.MacroDeck.ActionButton;
 using SuchByte.MacroDeck.Plugins;
-using SuchByte.MacroDeck.GUI.CustomControls; // WICHTIG für ActionConfigControl
-using SuchByte.MacroDeck.GUI;               // WICHTIG für ActionConfigurator
+using SuchByte.MacroDeck.GUI.CustomControls;
+using SuchByte.MacroDeck.GUI;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,27 +11,22 @@ namespace VoidCore.Tether
 {
     public class HttpRequestAction : PluginAction
     {
-        // Name der Aktion im Macro Deck Menü
-        public override string Name => "HTTP Request senden";
+        public override string Name => "HTTP Request";
 
-        // Beschreibung der Aktion
-        public override string Description => "Sendet einen GET oder POST Request an eine angegebene URL.";
+        public override string Description => "Send a GET or POST Request to the given URL.";
 
-        // Verknüpft die Aktion mit dem Einstellungsfenster (Configurator)
         public override bool CanConfigure => true;
 
-        // Übergibt das GUI-Fenster an Macro Deck: unser eigener Configurator mit URL-Textfeld
         public override ActionConfigControl GetActionConfigControl(ActionConfigurator actionConfigurator)
         {
             return new HttpRequestConfigurator(this, actionConfigurator);
         }
 
-        // Führt die eigentliche Aktion aus, wenn die Taste gedrückt wird
         public override void Trigger(string clientId, ActionButton actionButton)
         {
             if (string.IsNullOrEmpty(this.Configuration))
             {
-                return; // Keine Konfiguration vorhanden
+                return;
             }
 
             try
@@ -42,7 +37,6 @@ namespace VoidCore.Tether
 
                 if (string.IsNullOrWhiteSpace(url)) return;
 
-                // Führt den HTTP-Request im Hintergrund aus, um Macro Deck nicht einzufrieren
                 Task.Run(async () =>
                 {
                     try
@@ -62,13 +56,11 @@ namespace VoidCore.Tether
                     }
                     catch (Exception)
                     {
-                        // Fehlerbehandlung (z.B. ins Log schreiben, falls nötig)
                     }
                 });
             }
             catch
             {
-                // Ungültiges Konfigurationsformat geladen
             }
         }
     }
