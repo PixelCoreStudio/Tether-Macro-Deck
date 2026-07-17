@@ -17,7 +17,6 @@ namespace VoidCore.Tether
         private System.Windows.Forms.Label labelUrl;
         private System.Windows.Forms.Label labelMethod;
 
-        // Konstruktor angepasst: Verwendet jetzt direkt HttpRequestAction statt PluginAction
         public HttpRequestConfigurator(HttpRequestAction macroDeckAction, ActionConfigurator actionConfigurator)
         {
             this._macroDeckAction = macroDeckAction;
@@ -36,7 +35,7 @@ namespace VoidCore.Tether
             }
             else
             {
-                comboBoxMethod.SelectedIndex = 0; // GET als Standard
+                comboBoxMethod.SelectedIndex = 0;
             }
         }
 
