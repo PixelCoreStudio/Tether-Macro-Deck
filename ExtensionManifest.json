@@ -4,8 +4,8 @@
   "author": "VoidCore",
   "repository": "https://github.com/PixelCoreStudio/Tether-Macro-Deck",
   "packageId": "VoidCore.Tether",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "target-plugin-api-version": 40,
-  "target-macro-deck-version": "2.14.1",
+  "target-macro-deck-version": "2.15.0",
   "dll": "VoidCore.Tether.dll"
 }
