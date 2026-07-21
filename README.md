@@ -5,6 +5,8 @@ You can use it for many things like webhooks, smart-home control through their H
 I decided to make this plugin because I made the [Tether plugin for spicetify](https://github.com/PixelCoreStudio/Tether-Spicetify-Extension/tree/main) and I wanted to use a Macro Deck to control it.
 But it can be used for any other HTTP Request.
 
+The OBS got added because I was trying the OBS plugin that is in the plugin store but I noticed that it won't connect.
+
 ## Features
 - Custom HTTP Request action for Macro Deck
 - Supports GET and POST Requests
