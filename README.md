@@ -9,16 +9,23 @@ But it can be used for any other HTTP Request.
 - Custom HTTP Request action for Macro Deck
 - Supports GET and POST Requests
 - Runs asynchronously in the background without blocking the Macro Deck UI
+- Connects With OBS
+- Controls OBS
 
 ## Requirements
 - Macro Deck version 2.14.1 or higher
 
-## Usage
+## Usage HTTP
 1. In the button add a action and select the plugin
 2. Go to HTTP Request
 3. Select your method GET or POST
 4. Put your url you want to request
 5. Save
+
+## Usage OBS
+1. Go to the plugin configuration and put in your OBS websocket data. Make sure your websocket is on.
+2. Go to the OBS action you want to do.
+3. Configure everything.
 
 ## Contributing
 Issues and pull requests are welcome. Please briefly describe what was changed or added.
