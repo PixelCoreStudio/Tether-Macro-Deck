@@ -45,7 +45,7 @@ namespace VoidCore.Tether
 
             labelMethod = new System.Windows.Forms.Label
             {
-                Text = "Methode:",
+                Text = "Method:",
                 Location = new Point(20, 20),
                 Size = new Size(80, 20),
                 ForeColor = Color.White

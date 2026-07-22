@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using ObsWebSocket.Net.Protocol.Enums;
-using ObsWebSocket.Net.Protocol.Requests;
 using SuchByte.MacroDeck.GUI;
 using SuchByte.MacroDeck.GUI.CustomControls;
 
@@ -45,7 +43,7 @@ namespace VoidCore.Tether.OBS
         {
             this.Size = new System.Drawing.Size(400, 230);
 
-            labelSource = new System.Windows.Forms.Label { Text = "Sources:", Location = new System.Drawing.Point(20, 20), Size = new System.Drawing.Size(80, 20), ForeColor = System.Drawing.Color.White };
+            labelSource = new System.Windows.Forms.Label { Text = "Source:", Location = new System.Drawing.Point(20, 20), Size = new System.Drawing.Size(80, 20), ForeColor = System.Drawing.Color.White };
             comboBoxSource = new System.Windows.Forms.ComboBox { Location = new System.Drawing.Point(110, 17), Size = new System.Drawing.Size(200, 25), DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList };
             comboBoxSource.SelectedIndexChanged += (s, e) => { if (comboBoxSource.SelectedItem != null) textBoxSource.Text = comboBoxSource.SelectedItem.ToString(); };
             buttonRefresh = new System.Windows.Forms.Button { Text = "Refresh", Location = new System.Drawing.Point(318, 17), Size = new System.Drawing.Size(30, 25) };
@@ -84,11 +82,17 @@ namespace VoidCore.Tether.OBS
             if (!ObsConnectionManager.IsConnected) return;
             try
             {
-                var response = await ObsConnectionManager.Instance.Invoke<GetInputListResponse>(RequestType.GetInputList);
-                if (response?.Inputs == null) return;
+                var response = await ObsConnectionManager.InvokeAsync("GetInputList");
+                var inputs = response?["responseData"]?["inputs"] as JArray;
+                if (inputs == null) return;
+
                 comboBoxSource.Items.Clear();
-                foreach (var input in response.Inputs)
-                    comboBoxSource.Items.Add(input.InputName);
+                foreach (var input in inputs)
+                {
+                    string name = input["inputName"]?.ToString();
+                    if (!string.IsNullOrEmpty(name))
+                        comboBoxSource.Items.Add(name);
+                }
             }
             catch { }
         }
@@ -107,7 +111,7 @@ namespace VoidCore.Tether.OBS
                 ["target"] = (double)numericTarget.Value
             };
             _action.ConfigurationSummary = mode == "set"
-                ? $"{source}: auf {numericTarget.Value} dB setzen"
+                ? $"{source}: set to {numericTarget.Value} dB"
                 : $"{source}: {mode}";
             _action.Configuration = config.ToString();
             return true;

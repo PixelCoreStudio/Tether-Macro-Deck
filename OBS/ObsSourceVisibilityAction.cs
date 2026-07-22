@@ -3,17 +3,15 @@ using SuchByte.MacroDeck.ActionButton;
 using SuchByte.MacroDeck.GUI;
 using SuchByte.MacroDeck.GUI.CustomControls;
 using SuchByte.MacroDeck.Plugins;
-using ObsWebSocket.Net.Protocol.Enums;
 using System;
 using System.Threading.Tasks;
-using ObsWebSocket.Net.Protocol.Requests;
 
 namespace VoidCore.Tether.OBS
 {
     public class ObsSourceVisibilityAction : PluginAction
     {
         public override string Name => "OBS: Show/hide source";
-        public override string Description => "Shows or hides a source in an OBS scene.";
+        public override string Description => "Shows or hides a source (or a source inside a group) in an OBS scene.";
         public override bool CanConfigure => true;
 
         public override ActionConfigControl GetActionConfigControl(ActionConfigurator actionConfigurator)
@@ -23,46 +21,42 @@ namespace VoidCore.Tether.OBS
         {
             if (string.IsNullOrEmpty(this.Configuration)) return;
             if (!ObsConnectionManager.IsConnected) return;
+
             try
             {
                 var config = JObject.Parse(this.Configuration);
-                string sceneName = config["scene"]?.ToString();
-                string sourceName = config["source"]?.ToString();
+                string scene = config["scene"]?.ToString();
+                string source = config["source"]?.ToString();
+                string group = config["group"]?.ToString();
                 string mode = config["mode"]?.ToString() ?? "toggle";
 
-                if (string.IsNullOrWhiteSpace(sceneName) || string.IsNullOrWhiteSpace(sourceName)) return;
+                if (string.IsNullOrWhiteSpace(scene) || string.IsNullOrWhiteSpace(source)) return;
+
+                string effectiveScene = !string.IsNullOrWhiteSpace(group) ? group : scene;
 
                 Task.Run(async () =>
                 {
                     try
                     {
-                        var idResponse = await ObsConnectionManager.Instance.Invoke<GetSceneItemIdResponse>(
-                            RequestType.GetSceneItemId,
-                            new { sceneName, sourceName, searchOffset = 0 });
+                        var idResp = await ObsConnectionManager.InvokeAsync("GetSceneItemId",
+                            new { sceneName = effectiveScene, sourceName = source, searchOffset = 0 });
+                        if (idResp == null) return;
 
-                        if (idResponse == null) return;
-                        int sceneItemId = (int)idResponse.SceneItemId;
+                        int sceneItemId = idResp["responseData"]?["sceneItemId"]?.Value<int>() ?? -1;
+                        if (sceneItemId < 0) return;
 
                         bool newVisible;
-                        if (mode == "show")
-                        {
-                            newVisible = true;
-                        }
-                        else if (mode == "hide")
-                        {
-                            newVisible = false;
-                        }
+                        if (mode == "show") newVisible = true;
+                        else if (mode == "hide") newVisible = false;
                         else
                         {
-                            var visResponse = await ObsConnectionManager.Instance.Invoke<GetSceneItemEnabledResponse>(
-                                RequestType.GetSceneItemEnabled,
-                                new { sceneName, sceneItemId });
-                            newVisible = !(visResponse?.SceneItemEnabled ?? true);
+                            var visResp = await ObsConnectionManager.InvokeAsync("GetSceneItemEnabled",
+                                new { sceneName = effectiveScene, sceneItemId });
+                            newVisible = !(visResp?["responseData"]?["sceneItemEnabled"]?.Value<bool>() ?? true);
                         }
 
-                        ObsConnectionManager.Instance.Send(
-                            RequestType.SetSceneItemEnabled,
-                            new { sceneName, sceneItemId, sceneItemEnabled = newVisible });
+                        ObsConnectionManager.Send("SetSceneItemEnabled",
+                            new { sceneName = effectiveScene, sceneItemId, sceneItemEnabled = newVisible });
                     }
                     catch { }
                 });

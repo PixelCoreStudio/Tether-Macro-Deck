@@ -33,7 +33,7 @@ namespace VoidCore.Tether.OBS
 
             checkBoxAutoConnect = new CheckBox
             {
-                Text = "Auto connect on the start of Macro deck 2",
+                Text = "Auto-connect on Macro Deck startup",
                 Location = new Point(20, 140),
                 Size = new Size(360, 25)
             };
@@ -86,7 +86,7 @@ namespace VoidCore.Tether.OBS
         {
             ObsConnectionManager.SaveConfig(textBoxHost.Text.Trim(), (int)numericPort.Value, textBoxPassword.Text, checkBoxAutoConnect.Checked);
             ObsConnectionManager.Reconnect();
-            labelStatus.Text = "Connectiontry …";
+            labelStatus.Text = "Connecting…";
             labelStatus.ForeColor = Color.Orange;
         }
     }

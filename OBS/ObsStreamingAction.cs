@@ -3,9 +3,7 @@ using SuchByte.MacroDeck.ActionButton;
 using SuchByte.MacroDeck.GUI;
 using SuchByte.MacroDeck.GUI.CustomControls;
 using SuchByte.MacroDeck.Plugins;
-using ObsWebSocket.Net.Protocol.Enums;
 using System;
-using System.Threading.Tasks;
 
 namespace VoidCore.Tether.OBS
 {
@@ -30,25 +28,13 @@ namespace VoidCore.Tether.OBS
                     mode = config["mode"]?.ToString() ?? "toggle";
                 }
 
-                Task.Run(async () =>
+                string requestType = mode switch
                 {
-                    try
-                    {
-                        if (mode == "toggle")
-                        {
-                            ObsConnectionManager.Instance.Send(RequestType.ToggleStream);
-                        }
-                        else if (mode == "start")
-                        {
-                            ObsConnectionManager.Instance.Send(RequestType.StartStream);
-                        }
-                        else
-                        {
-                            ObsConnectionManager.Instance.Send(RequestType.StopStream);
-                        }
-                    }
-                    catch { }
-                });
+                    "start" => "StartStream",
+                    "stop" => "StopStream",
+                    _ => "ToggleStream"
+                };
+                ObsConnectionManager.Send(requestType);
             }
             catch (Exception) { }
         }

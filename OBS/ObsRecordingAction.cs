@@ -3,7 +3,6 @@ using SuchByte.MacroDeck.ActionButton;
 using SuchByte.MacroDeck.GUI;
 using SuchByte.MacroDeck.GUI.CustomControls;
 using SuchByte.MacroDeck.Plugins;
-using ObsWebSocket.Net.Protocol.Enums;
 using System;
 
 namespace VoidCore.Tether.OBS
@@ -11,7 +10,7 @@ namespace VoidCore.Tether.OBS
     public class ObsRecordingAction : PluginAction
     {
         public override string Name => "OBS: Recording options";
-        public override string Description => "Start, stop, pause oder toggle the OBS-Recording.";
+        public override string Description => "Start, stop, pause, or toggle OBS recording.";
         public override bool CanConfigure => true;
 
         public override ActionConfigControl GetActionConfigControl(ActionConfigurator actionConfigurator)
@@ -29,16 +28,15 @@ namespace VoidCore.Tether.OBS
                     mode = config["mode"]?.ToString() ?? "toggle";
                 }
 
-                RequestType requestType = mode switch
+                string requestType = mode switch
                 {
-                    "start"  => RequestType.StartRecord,
-                    "stop"   => RequestType.StopRecord,
-                    "pause"  => RequestType.PauseRecord,
-                    "resume" => RequestType.ResumeRecord,
-                    _        => RequestType.ToggleRecord
+                    "start" => "StartRecord",
+                    "stop" => "StopRecord",
+                    "pause" => "PauseRecord",
+                    "resume" => "ResumeRecord",
+                    _ => "ToggleRecord"
                 };
-
-                ObsConnectionManager.Instance.Send(requestType);
+                ObsConnectionManager.Send(requestType);
             }
             catch (Exception) { }
         }

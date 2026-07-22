@@ -5,9 +5,6 @@ using SuchByte.MacroDeck.Plugins;
 
 namespace VoidCore.Tether.OBS
 {
-    /// <summary>
-    /// Geteilter Konfigurator für Stream- und Aufnahme-Toggle-Actions.
-    /// </summary>
     public class ObsToggleConfigurator : ActionConfigControl
     {
         private readonly PluginAction _action;

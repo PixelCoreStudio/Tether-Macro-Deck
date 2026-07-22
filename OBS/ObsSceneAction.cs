@@ -26,9 +26,7 @@ namespace VoidCore.Tether.OBS
                 string sceneName = config["scene"]?.ToString();
                 if (string.IsNullOrWhiteSpace(sceneName)) return;
 
-                ObsConnectionManager.Instance.Send(
-                    ObsWebSocket.Net.Protocol.Enums.RequestType.SetCurrentProgramScene,
-                    new { sceneName });
+                ObsConnectionManager.Send("SetCurrentProgramScene", new { sceneName });
             }
             catch (Exception) { }
         }

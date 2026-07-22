@@ -20,10 +20,8 @@ namespace VoidCore.Tether
         {
             this.Actions = new List<PluginAction>
             {
-                // HTTP
                 new HttpRequestAction(),
 
-                // OBS WebSocket
                 new ObsConnectAction(),
                 new ObsSceneAction(),
                 new ObsStreamingAction(),

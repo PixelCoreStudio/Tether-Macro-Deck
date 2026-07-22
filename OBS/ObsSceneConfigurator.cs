@@ -1,9 +1,6 @@
 using Newtonsoft.Json.Linq;
-using ObsWebSocket.Net.Protocol.Enums;
-using ObsWebSocket.Net.Protocol.Requests;
 using SuchByte.MacroDeck.GUI;
 using SuchByte.MacroDeck.GUI.CustomControls;
-using System.Threading.Tasks;
 
 namespace VoidCore.Tether.OBS
 {
@@ -50,7 +47,7 @@ namespace VoidCore.Tether.OBS
             buttonRefresh.Click += (s, e) => TryLoadScenes();
 
             textBoxSceneManual = new System.Windows.Forms.TextBox { Location = new System.Drawing.Point(110, 57), Size = new System.Drawing.Size(270, 25) };
-            textBoxSceneManual.PlaceholderText = "Enter Scenename manually";
+            textBoxSceneManual.PlaceholderText = "Enter scene name manually";
 
             labelHint = new System.Windows.Forms.Label
             {
@@ -68,12 +65,17 @@ namespace VoidCore.Tether.OBS
             if (!ObsConnectionManager.IsConnected) return;
             try
             {
-                var response = await ObsConnectionManager.Instance.Invoke<GetSceneListResponse>(RequestType.GetSceneList);
-                if (response?.Scenes == null) return;
+                var response = await ObsConnectionManager.InvokeAsync("GetSceneList");
+                var scenes = response?["responseData"]?["scenes"] as JArray;
+                if (scenes == null) return;
 
                 comboBoxScene.Items.Clear();
-                foreach (var scene in response.Scenes)
-                    comboBoxScene.Items.Add(scene.SceneName);
+                foreach (var scene in scenes)
+                {
+                    string name = scene["sceneName"]?.ToString();
+                    if (!string.IsNullOrEmpty(name))
+                        comboBoxScene.Items.Add(name);
+                }
 
                 labelHint.Text = $"{comboBoxScene.Items.Count} Scene(s) loaded.";
                 labelHint.ForeColor = System.Drawing.Color.LightGreen;
